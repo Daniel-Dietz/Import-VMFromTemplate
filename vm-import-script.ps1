@@ -14,12 +14,10 @@ $selectedIndex = Read-Host
 
 $templates[$selectedIndex-1].Name
 #Search for VCMX file in selected directory
-$vcmxPath = Get-Childitem -Path ($vmStorePath + $templates[$selectedIndex-1].Name + '\Virtual Machines\') -Include '.vcmx'
-
+$vmcxPath = Get-Childitem -Path ($vmStorePath + $templates[$selectedIndex-1].Name + '\Virtual Machines\') -Recurse -Include '*.vmcx'
 
 #Modify the variables to suit your needs
-$vmcxPath = 'D:\Hyper-V exports\CENTOS7-template\Virtual Machines\22C1E1A1-458E-4741-B3AA-D7C46A178F37.vmcx'
-$newVmName = ""
+#$vmcxPath = 'D:\Hyper-V exports\CENTOS7-template\Virtual Machines\22C1E1A1-458E-4741-B3AA-D7C46A178F37.vmcx'
 
 #Get VM name and set the detination path
 Write-Output 'Insert name for the new VM:'
