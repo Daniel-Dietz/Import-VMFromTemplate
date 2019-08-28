@@ -1,20 +1,21 @@
 #Use this script at your own risk
 #TODO Dynamically select vm store
 
+#Define VM store and destination for the new VMs 
 $vmStorePath = "D:\Hyper-V exports\"
 $destinationPath = 'F:\VirtualMachines\'
-$templates = Get-ChildItem -Path $vmStorePath
-$index = 1
 
 #Lists available VMs to import/clone
-
 Write-Host ("VMs available in " + $vmStorePath) -ForegroundColor Green
 
+$templates = Get-ChildItem -Path $vmStorePath
+$index = 1
 foreach($template in $templates){
     Write-Output ("$index" + " - " + "$template.Name")
     $index++
 }
 
+#Read host for imput - select which VM to clone
 Write-Host 'Select VM to import/clone:' -ForegroundColor Green
 $selectedIndex = Read-Host
 
