@@ -13,6 +13,7 @@ $destinationPath = 'F:\VirtualMachines\' + $newVmName
 
 #import virtual machine
 #TODO - Create folders in final destination for VHDs, snapshots, vms etc 
+Write-Output 'Importing machine ' $newVmName 
 Import-VM -Path $vmcxPath `
     -copy  `
     -GenerateNewId `
