@@ -31,7 +31,13 @@ $newVmName = Read-Host
 $destinationPath += $newVmName
 
 #import virtual machine
-#TODO check if the path is already used
+
+#Checks if destination path is available
+#TODO promp if folder exists but is empty
+if(Test-Path -Path $destinationPath){
+    Throw ("Directory " + $destinationPath + " already exists")
+}
+
 Write-Host ("`nImporting VM: " + $newVmName ) -ForegroundColor Green
 Import-VM -Path $vmcxPath `
     -copy  `
