@@ -6,4 +6,5 @@ Importing VM through Hyper-V GUI takes a bit of clicking/typin. This script aims
 Functions
 - Creates solid directory structure
 - Renames VM to the desired name after importing
-- Renames VHD to match the VM name (not availabel yet)
+- Renames VHD to match the VM name (work in progress)
+- Lets user select which template he wants to use (or which machine to clone)
