@@ -8,14 +8,14 @@ $index = 1
 
 #Lists available VMs to import/clone
 
-Write-Output ("VMs available in " + $vmStorePath) -ForegroundColor Green
+Write-Host ("VMs available in " + $vmStorePath) -ForegroundColor Green
 
 foreach($template in $templates){
     Write-Output ("$index" + " - " + "$template.Name")
     $index++
 }
 
-Write-Output 'Select VM to import/clone:' -ForegroundColor Green
+Write-Host 'Select VM to import/clone:' -ForegroundColor Green
 $selectedIndex = Read-Host
 
 #Search for VCMX file in selected directory
@@ -23,7 +23,7 @@ $vmcxPath = Get-Childitem -Path ($vmStorePath + $templates[$selectedIndex-1].Nam
 
 
 #Get VM name and set the detination path
-Write-Output 'Insert name for the new VM:' -ForegroundColor Green
+Write-Host 'Insert name for the new VM:' -ForegroundColor Green
 $newVmName = Read-Host
 
 #Set destination path
@@ -31,13 +31,14 @@ $destinationPath += $newVmName
 
 #import virtual machine
 #TODO check if the path is already used
-Write-Output ("`nImporting VM " + $newVmName ) -ForegroundColor Green
+Write-Host ("`nImporting VM: " + $newVmName ) -ForegroundColor Green
 Import-VM -Path $vmcxPath `
     -copy  `
     -GenerateNewId `
     -SnapshotFilePath  ($destinationPath + '\Snapshots') `
     -VhdDestinationPath ($destinationPath + '\Virtual Hard Disks') `
-    -VirtualMachinePath ($destinationPath)
+    -VirtualMachinePath ($destinationPath) `
+    | out-null
 
 #Get ID of the newly created VM
 $virtualMachines = Get-VM
@@ -54,3 +55,8 @@ foreach($vm in $virtualMachines){
 Set-Vm -VM $tempVM -NewVMName $newVmName
 
 #TODO Rename VHD to match VM name and reattach it
+
+#End Result
+#TODO display errors if any
+Get-Vm -Name $newVmName
+Write-Host ("`nVM was sucessfully imported") -ForegroundColor Green
