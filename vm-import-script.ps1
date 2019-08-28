@@ -5,12 +5,17 @@ $templates = Get-ChildItem -Path $vmStorePath
 $index = 1
 
 foreach($template in $templates){
-    Write-Output $index + ' - ' + $template.Name
+    Write-Output ("$index" + " - " + "$template.Name")
     $index++
 }
 
 Write-Host 'Select VM to clone:'
 $selectedIndex = Read-Host
+
+$templates[$selectedIndex-1].Name
+#Search for VCMX file in selected directory
+$vcmxPath = Get-Childitem -Path ($vmStorePath + $templates[$selectedIndex-1].Name + '\Virtual Machines\') -Include '.vcmx'
+
 
 #Modify the variables to suit your needs
 $vmcxPath = 'D:\Hyper-V exports\CENTOS7-template\Virtual Machines\22C1E1A1-458E-4741-B3AA-D7C46A178F37.vmcx'
@@ -37,8 +42,8 @@ Import-VM -Path $vmcxPath `
 $virtualMachines = Get-VM
 
 foreach($vm in $virtualMachines){
-    $vhdpath = Get-VHD -VMId $vm.id | Select-Object -ExpandProperty Path
-    if($vhdpath -like ('*' + $vm.name + '*')){
+    $vhdpath = Get-VHD -VMId $vm.id
+    if($vhdpath.Path -like ('*' + $vm.name + '*')){
         $tempVM = $vm
         break
     }
