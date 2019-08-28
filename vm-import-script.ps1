@@ -1,34 +1,37 @@
 #Use this script at your own risk
-#TODO - dynamically select templates
+#TODO Dynamically select vm store
+
 $vmStorePath = "D:\Hyper-V exports\"
+$destinationPath = 'F:\VirtualMachines\'
 $templates = Get-ChildItem -Path $vmStorePath
 $index = 1
+
+#Lists available VMs to import/clone
+
+Write-Output ("VMs available in " + $vmStorePath) -ForegroundColor Green
 
 foreach($template in $templates){
     Write-Output ("$index" + " - " + "$template.Name")
     $index++
 }
 
-Write-Host 'Select VM to clone:'
+Write-Output 'Select VM to import/clone:' -ForegroundColor Green
 $selectedIndex = Read-Host
 
-$templates[$selectedIndex-1].Name
 #Search for VCMX file in selected directory
 $vmcxPath = Get-Childitem -Path ($vmStorePath + $templates[$selectedIndex-1].Name + '\Virtual Machines\') -Recurse -Include '*.vmcx'
 
-#Modify the variables to suit your needs
-#$vmcxPath = 'D:\Hyper-V exports\CENTOS7-template\Virtual Machines\22C1E1A1-458E-4741-B3AA-D7C46A178F37.vmcx'
 
 #Get VM name and set the detination path
-Write-Output 'Insert name for the new VM:'
+Write-Output 'Insert name for the new VM:' -ForegroundColor Green
 $newVmName = Read-Host
 
 #Set destination path
-$destinationPath = 'F:\VirtualMachines\' + $newVmName
+$destinationPath += $newVmName
 
 #import virtual machine
 #TODO check if the path is already used
-Write-Output '`nImporting machine ' + $newVmName 
+Write-Output ("`nImporting VM " + $newVmName ) -ForegroundColor Green
 Import-VM -Path $vmcxPath `
     -copy  `
     -GenerateNewId `
