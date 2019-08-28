@@ -1,6 +1,6 @@
 Use at your own risk!
 
-This script extends functionality of Import-VM powershell command and is made especially for importing VMs fromn templates.
+This script extends functionality of Import-VM powershell command and is made especially for VMs fromn templates/exports.
 Importing VM through Hyper-V GUI takes a bit of clicking/typin. This script aims to make the process of spinning up VMs from from template easy and convenient.
 
 Functions
