@@ -38,7 +38,7 @@ if(Test-Path -Path $destinationPath){
     Throw ("Directory " + $destinationPath + " already exists")
 }
 
-Write-Host ("`nImporting VM: " + $newVmName ) -ForegroundColor Green
+Write-Host ("`nImporting VM " + $newVmName + " please wait...") -ForegroundColor Yellow
 Import-VM -Path $vmcxPath `
     -copy  `
     -GenerateNewId `
@@ -61,7 +61,16 @@ foreach($vm in $virtualMachines){
 #Rename the VM from template name to the desired name
 Set-Vm -VM $tempVM -NewVMName $newVmName
 
-#TODO Rename VHD to match VM name and reattach it
+#Rename VHD to match VM name and reattach it to the VM on the same controller and location
+$vmController = Get-VMHardDiskDrive -VMName $newVmName
+
+Rename-Item -Path ($destinationPath + '\Virtual Hard Disks\*.vhdx') -NewName ($newVmName + '.vhdx')
+
+Set-VMHardDiskDrive -VMName $newVmName `
+-ControllerType $vmController.ControllerType `
+-ControllerNumber $vmController.ControllerNumber `
+-ControllerLocation $vmController.ControllerLocation `
+-Path ($destinationPath + '\Virtual Hard Disks\' + $newVmName + '.vhdx')
 
 #End Result
 #TODO display errors if any
