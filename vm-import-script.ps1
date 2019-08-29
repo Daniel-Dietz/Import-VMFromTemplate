@@ -29,6 +29,7 @@ $vmcxPath = Get-Childitem -Path ($vmStorePath + $templates[$selectedIndex-1].Nam
 
 
 #Get VM name and set the detination path
+#TODO vm name cannot include "/"
 Write-Host 'Insert name for the new VM:' -ForegroundColor Green
 $newVmName = Read-Host
 
@@ -83,10 +84,11 @@ $vmNetAdapters = Get-VMNetworkAdapter -VMName $newVmName
 foreach($netAdapter in $vmNetAdapters){
     Write-Host ("`n Set VLAN id for the vm network adapter " + $netAdapter.Name) -ForegroundColor Green
     $vlanID = Read-Host
-
-    Set-VMNetworkAdapterVlan -VMName $newVmName -VlanId $vlanID -VMNetworkAdapterName $netAdapter
+    if($vlanID -eq ""){
+        break
+    }
+    Set-VMNetworkAdapterVlan -Access -VMName $newVmName -VlanId $vlanID -VMNetworkAdapterName $netAdapter.Name
 }
-
 
 #End Result
 #TODO display errors if any
