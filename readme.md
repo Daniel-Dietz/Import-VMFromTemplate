@@ -19,4 +19,6 @@ TODO
 -   Dynamically chose vm/template store
 -   Dynamically select destination path
 -   Prevent rewriting of existing directories
+
+TESTING
 -   Hyper-V 2012 R2 compatibility (uses xml config files instead of vmcx)
