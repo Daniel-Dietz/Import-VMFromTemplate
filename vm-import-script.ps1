@@ -25,8 +25,13 @@ Write-Host 'Select VM to import/clone:' -ForegroundColor Green
 $selectedIndex = Read-Host
 
 #Search for VCMX file in selected directory
-$vmcxPath = Get-Childitem -Path ($vmStorePath + $templates[$selectedIndex-1].Name + '\Virtual Machines\') -Recurse -Include '*.vmcx'
+#TEST Hyper-V 2012 R2 compatibility (xml config files instead of vmcx)
 
+$configfilePath = $vmStorePath + $templates[$selectedIndex-1].Name + '\Virtual Machines\'
+
+if( -NOT ($config = Get-Childitem -Path $configfilePath -Recurse -Include '*.vmcx')){
+    $config = Get-Childitem -Path $configfilePath -Recurse -Include '*.xml'
+}
 
 #Get VM name and set the detination path
 #TODO vm name cannot include "/"
@@ -45,7 +50,7 @@ if(Test-Path -Path $destinationPath){
 }
 
 Write-Host ("`nImporting VM " + $newVmName + " please wait...") -ForegroundColor Yellow
-Import-VM -Path $vmcxPath `
+Import-VM -Path $config `
     -copy  `
     -GenerateNewId `
     -SnapshotFilePath  ($destinationPath + '\Snapshots') `
@@ -78,11 +83,11 @@ Set-VMHardDiskDrive -VMName $newVmName `
 -ControllerLocation $vmController.ControllerLocation `
 -Path ($destinationPath + '\Virtual Hard Disks\' + $newVmName + '.vhdx')
 
-#TODO Get/Set vm network adapter vlan 
+#Set VLANS on all network adapters (empty = default)
 $vmNetAdapters = Get-VMNetworkAdapter -VMName $newVmName
 
 foreach($netAdapter in $vmNetAdapters){
-    Write-Host ("`n Set VLAN id for the vm network adapter " + $netAdapter.Name) -ForegroundColor Green
+    Write-Host ("`nSet VLAN id for the vm network adapter (leave empty for default) " + $netAdapter.Name) -ForegroundColor Green
     $vlanID = Read-Host
     if($vlanID -eq ""){
         break
