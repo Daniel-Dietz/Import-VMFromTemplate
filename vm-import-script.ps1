@@ -4,7 +4,6 @@
 #TODO input arguments VMNAME, VLAN, DESTINATION, TEMPLATE
 #TODO Refactor, create functions, clean up code
 #TODO Dynamically select vm store
-#TODO Hyper-V 2012 R2 compatibility (xml config files instead of vmcx)
 
 #Define VM store and destination for the new VMs 
 $vmStorePath = "D:\Hyper-V exports\"
@@ -25,23 +24,21 @@ Write-Host 'Select VM to import/clone:' -ForegroundColor Green
 $selectedIndex = Read-Host
 
 #Search for VCMX file in selected directory
-#TEST Hyper-V 2012 R2 compatibility (xml config files instead of vmcx)
+#TEST Hyper-V 2012 R2 compatibility (xml files instead of vmcx)
+$configFolderPath = $vmStorePath + $templates[$selectedIndex-1].Name + '\Virtual Machines\'
 
-$configfilePath = $vmStorePath + $templates[$selectedIndex-1].Name + '\Virtual Machines\'
-
-if( -NOT ($config = Get-Childitem -Path $configfilePath -Recurse -Include '*.vmcx')){
-    $config = Get-Childitem -Path $configfilePath -Recurse -Include '*.xml'
+if( -NOT ($configFilePath = Get-Childitem -Path $configFolderPath -Recurse -Include '*.vmcx')){
+    $configFilePath = Get-Childitem -Path $configFolderPath -Recurse -Include '*.xml'
 }
 
-#Get VM name and set the detination path
-#TODO vm name cannot include "/"
+#Get VM name and set the detination path + filter input to ensure desired folder structure
 Write-Host 'Insert name for the new VM:' -ForegroundColor Green
 $newVmName = Read-Host
-
-#Set destination path
-$destinationPath += $newVmName
-
-#import virtual machine
+if($newVmName -notlike "*/*" -and $newVmName -notlike "*\*" ){
+    $destinationPath += $newVmName
+}else{
+    Throw "VM name cannot contain / or \"
+}
 
 #Checks if destination path is available
 #TODO promp if folder exists but is empty
@@ -49,8 +46,9 @@ if(Test-Path -Path $destinationPath){
     Throw ("Directory " + $destinationPath + " already exists")
 }
 
+#import virtual machine
 Write-Host ("`nImporting VM " + $newVmName + " please wait...") -ForegroundColor Yellow
-Import-VM -Path $config `
+Import-VM -Path $configFilePath `
     -copy  `
     -GenerateNewId `
     -SnapshotFilePath  ($destinationPath + '\Snapshots') `
@@ -58,7 +56,7 @@ Import-VM -Path $config `
     -VirtualMachinePath ($destinationPath) `
     | out-null
 
-#Get ID of the newly created VM
+#Get all vms and search for the newly created one 
 $virtualMachines = Get-VM
 
 foreach($vm in $virtualMachines){
