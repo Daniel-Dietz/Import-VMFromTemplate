@@ -1,5 +1,10 @@
 #Use this script at your own risk
+#This script is made only for Hyper-V 2016 and later
+
+#TODO input arguments VMNAME, VLAN, DESTINATION, TEMPLATE
+#TODO Refactor, create functions, clean up code
 #TODO Dynamically select vm store
+#TODO Hyper-V 2012 R2 compatibility (xml config files instead of vmcx)
 
 #Define VM store and destination for the new VMs 
 $vmStorePath = "D:\Hyper-V exports\"
@@ -71,6 +76,17 @@ Set-VMHardDiskDrive -VMName $newVmName `
 -ControllerNumber $vmController.ControllerNumber `
 -ControllerLocation $vmController.ControllerLocation `
 -Path ($destinationPath + '\Virtual Hard Disks\' + $newVmName + '.vhdx')
+
+#TODO Get/Set vm network adapter vlan 
+$vmNetAdapters = Get-VMNetworkAdapter -VMName $newVmName
+
+foreach($netAdapter in $vmNetAdapters){
+    Write-Host ("`n Set VLAN id for the vm network adapter " + $netAdapter.Name) -ForegroundColor Green
+    $vlanID = Read-Host
+
+    Set-VMNetworkAdapterVlan -VMName $newVmName -VlanId $vlanID -VMNetworkAdapterName $netAdapter
+}
+
 
 #End Result
 #TODO display errors if any
