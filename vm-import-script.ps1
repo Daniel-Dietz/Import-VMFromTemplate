@@ -7,7 +7,13 @@ function Import-VMAdvanced {
     .DESCRIPTION
     Imports Virtual Machine from template, Renames the imported vm inside Hyper-V host, Keeps convenient directory structure, Assigns Vlan to one or more network adapters
 
-    .Import
+    .EXAMPLE
+    Import-VMAdvanced
+
+    .NOTES
+    Created by Jakub Petrovic
+    https://github.com/petrojak
+    https://www.linkedin.com/in/jakub-petrovič-32904a10b/
     
     #>
 }
