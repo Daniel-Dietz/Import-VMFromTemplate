@@ -1,3 +1,28 @@
+function Import-VMAdvanced 
+{
+
+    <#
+    .SYNOPSIS
+    Import Virtual Machine to Hyper-V host with extra features
+
+    .DESCRIPTION
+    Imports Virtual Machine to Hyper-V host, Renames it to desired name, Sets vlan for each network adapter, Keeps convenient directory structure.
+
+    .EXAMPLE
+    Import-VMAdvanced
+
+    .EXAMPLE
+    Import-VMAdvanced -VMName Server1 -Vlan 100
+
+    .NOTES
+    Jakub Petrovic
+    https://github.com/petrojak
+    https://www.linkedin.com/in/jakub-petrovič-32904a10b/
+
+
+    #>
+    
+
 #Use this script at your own risk
 #This script is made only for Hyper-V 2016 and later
 
@@ -97,3 +122,5 @@ foreach($netAdapter in $vmNetAdapters){
 #TODO display errors if any
 Get-Vm -Name $newVmName
 Write-Host ("`nVM was sucessfully imported") -ForegroundColor Green
+
+}
