@@ -1,3 +1,17 @@
+function Import-VMAdvanced {
+
+    <#
+    .SYNOPSIS
+    Import Vitual Machine into Hyper-V host with extended functionality
+
+    .DESCRIPTION
+    Imports Virtual Machine from template, Renames the imported vm inside Hyper-V host, Keeps convenient directory structure, Assigns Vlan to one or more network adapters
+
+    .Import
+    
+    #>
+}
+
 #Use this script at your own risk
 #This script is made only for Hyper-V 2016 and later
 
