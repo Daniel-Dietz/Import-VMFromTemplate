@@ -25,13 +25,6 @@ function Import-VMFromTemplate {
         [string]$templateName
     )
 
-        #Use this script at your own risk
-    #This script is made only for Hyper-V 2016 and later
-
-    #TODO input arguments VMNAME, VLAN, DESTINATION, TEMPLATE
-    #TODO Refactor, create functions, clean up code
-    #TODO Dynamically select vm store
-
     #Define VM store and destination for the new VMs 
     $vmStorePath = "D:\Hyper-V exports\"
     $destinationPath = 'F:\VirtualMachines\'
