@@ -58,10 +58,11 @@ Import-VM -Path $configFilePath `
 
 #Get all vms and search for the newly created one 
 $virtualMachines = Get-VM
+$virtualMachines = Get-VM
 
 foreach($vm in $virtualMachines){
     $vhdpath = Get-VHD -VMId $vm.id
-    if($vhdpath.Path -like ('*' + $vm.name + '*')){
+    if($vhdpath.Path -like ('*' + $newVmName + '*')){
         $tempVM = $vm
         break
     }
